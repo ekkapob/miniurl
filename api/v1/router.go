@@ -20,6 +20,8 @@ func NewRouter(r *mux.Router) {
 	ctx := handlers.Context{
 		DB: db,
 	}
-	v1.HandleFunc("/hello", ctx.Hello2)
+
+	v1.HandleFunc("/urls", ctx.CreateURL).Methods("POST")
+	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).Methods("GET")
 
 }

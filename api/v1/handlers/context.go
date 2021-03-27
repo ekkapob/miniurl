@@ -1,8 +1,12 @@
 package handlers
 
-import "github.com/go-pg/pg/v10"
+import (
+	"sync"
+
+	"github.com/go-pg/pg/v10"
+)
 
 type Context struct {
-	DB   *pg.DB
-	Name string
+	DB *pg.DB
+	mu sync.Mutex
 }
