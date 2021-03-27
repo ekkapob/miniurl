@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"miniurl/api/models"
 	"net/http"
 
@@ -10,7 +11,6 @@ import (
 
 func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 
 	vars := mux.Vars(r)
 	shortURL := vars["shortURL"]
@@ -24,6 +24,7 @@ func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 		).
 		Select()
 	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(
 			struct {
 				Error string `json:"error"`
@@ -33,6 +34,15 @@ func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	c.mu.Lock()
+	url.Hits++
+	_, err = c.DB.Model(&url).WherePK().Update()
+	if err != nil {
+		log.Println("unable to update the url counter:", err)
+	}
+	c.mu.Unlock()
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(
 		struct {
 			ShortURL string `json:"short_url"`

@@ -1,8 +1,12 @@
 POSTGRES_URL = postgres://postgres:postgres@localhost:5432/app?sslmode=disable
 URL_EXPIRE_SECONDS = 604800
+HOSTNAME = http://127.0.0.1:8000
 
 dev:
-	URL_EXPIRE_SECONDS=$(URL_EXPIRE_SECONDS) POSTGRES_URL=$(POSTGRES_URL) air
+	HOSTNAME=$(HOSTNAME) \
+	URL_EXPIRE_SECONDS=$(URL_EXPIRE_SECONDS) \
+ 	POSTGRES_URL=$(POSTGRES_URL) \
+ 	air
 
 # example:
 # $ make mg-create name=create_users_table

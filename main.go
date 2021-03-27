@@ -1,19 +1,16 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"miniurl/api"
+	"miniurl/web"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
 	"github.com/gorilla/mux"
-)
-
-const (
-	serverAddr = "127.0.0.1"
 )
 
 type Counter struct {
@@ -28,18 +25,18 @@ func (c *Counter) Inc() {
 }
 
 func main() {
-	port := flag.String("port", ":8000", "server port")
-	flag.Parse()
+	hostname := os.Getenv("HOSTNAME")
 	r := mux.NewRouter()
 
 	api.NewRouter(r)
+	web.NewRouter(r)
 
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         serverAddr + *port,
+		Addr:         ":8000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	fmt.Println("server is listening on", *port)
+	fmt.Println("server is listening on", hostname)
 	log.Fatal(srv.ListenAndServe())
 }
