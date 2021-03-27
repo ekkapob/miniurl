@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"log"
 	"miniurl/api"
-	"miniurl/internal"
-	"miniurl/pkg/base62"
-	"miniurl/web"
 	"net/http"
 	"sync"
 	"time"
@@ -35,14 +32,7 @@ func main() {
 	flag.Parse()
 	r := mux.NewRouter()
 
-	fmt.Println(base62.Encode(123))
-
-	ctx := internal.Context{
-		Name: "hello",
-	}
-
-	web.NewRouter(ctx, r)
-	api.NewRouter(ctx, r)
+	api.NewRouter(r)
 
 	srv := &http.Server{
 		Handler:      r,
