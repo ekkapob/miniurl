@@ -8,6 +8,13 @@ dev:
  	POSTGRES_URL=$(POSTGRES_URL) \
  	air
 
+run:
+	go install
+	HOSTNAME=$(HOSTNAME) \
+	URL_EXPIRE_SECONDS=$(URL_EXPIRE_SECONDS) \
+ 	POSTGRES_URL=$(POSTGRES_URL) \
+ 	miniurl
+
 # example:
 # $ make mg-create name=create_users_table
 mg-create:

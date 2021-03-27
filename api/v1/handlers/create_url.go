@@ -51,18 +51,21 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	// count, err := c.DB.Model(&models.URL{}).Count()
+	// if err != nil {
+	// 	log.Println("error when count urls:", err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	return
+	// }
 
-	count, err := c.DB.Model(&models.URL{}).Count()
+	counter, err := c.GetCounter()
 	if err != nil {
-		log.Println("error when count urls:", err)
+		log.Println("error when get counter:", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	count++
-	shortURL := base62.Encode(uint64(count))
+	shortURL := base62.Encode(uint64(counter))
 	url := models.URL{
 		ShortURL:         shortURL,
 		FullURL:          req.URL,

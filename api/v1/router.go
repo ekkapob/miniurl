@@ -21,7 +21,18 @@ func NewRouter(r *mux.Router) {
 		DB: db,
 	}
 
+	// var counter int
+	// _, err = db.QueryOneContext(
+	// 	context.Background(),
+	// 	pg.Scan(&counter),
+	// 	`SELECT nextval('url_counter')`,
+	// )
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println("sss")
+	// fmt.Println(counter)
+
 	v1.HandleFunc("/urls", ctx.CreateURL).Methods("POST")
 	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).Methods("GET")
-
 }
