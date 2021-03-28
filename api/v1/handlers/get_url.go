@@ -2,8 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
-	"miniurl/api/models"
+	"miniurl/db"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,14 +14,11 @@ func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	shortURL := vars["shortURL"]
 
-	var url models.URL
-	err := c.DB.Model(&url).
-		Where(
-			`short_url = ? AND
-			now() <= created_at + expires_in_seconds * interval '1 second'`,
-			shortURL,
-		).
-		Select()
+	dbCtx := &db.Context{
+		DB: c.DB,
+	}
+
+	url, err := dbCtx.GetURLFromShortURL(shortURL)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(
@@ -33,14 +29,6 @@ func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 			})
 		return
 	}
-
-	c.mu.Lock()
-	url.Hits++
-	_, err = c.DB.Model(&url).WherePK().Update()
-	if err != nil {
-		log.Println("unable to update the url counter:", err)
-	}
-	c.mu.Unlock()
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(

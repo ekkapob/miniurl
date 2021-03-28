@@ -1,14 +1,11 @@
-package handlers
+package context
 
 import (
-	"sync"
-
 	"github.com/go-pg/pg/v10"
 	"github.com/go-redis/redis/v8"
 )
 
-type Context struct {
+type App struct {
 	DB *pg.DB
 	RD *redis.Client
-	mu sync.Mutex
 }

@@ -7,7 +7,12 @@ services:
     ports:
       - "5432:5432"
     environment:
-      # - TZ=Asia/Bangkok
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=app
+  redis:
+    image: redis
+    volumes:
+      - ./redis-data:/var/lib/redis
+    ports:
+      - "6379:6379"

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"miniurl/api/models"
+	"miniurl/db"
 	"miniurl/pkg/base62"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ func init() {
 }
 
 func setURLExpiresInSeconds() {
-	i, err := strconv.Atoi(os.Getenv("URL_EXPIRE_SECONDS"))
+	i, err := strconv.Atoi(os.Getenv("POSTGRES_URL_EXPIRE_SECONDS"))
 	if err == nil && i >= 0 {
 		expiresInSeconds = i
 	}
@@ -40,7 +41,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !isURLValid(req.URL) {
+	if !isValidURL(req.URL) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(
 			struct {
@@ -51,14 +52,11 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// count, err := c.DB.Model(&models.URL{}).Count()
-	// if err != nil {
-	// 	log.Println("error when count urls:", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	return
-	// }
+	dbCtx := &db.Context{
+		DB: c.DB,
+	}
 
-	counter, err := c.GetCounter()
+	counter, err := dbCtx.GetCounter()
 	if err != nil {
 		log.Println("error when get counter:", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -71,7 +69,8 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		FullURL:          req.URL,
 		ExpiresInSeconds: expiresInSeconds,
 	}
-	_, err = c.DB.Model(&url).Insert()
+
+	err = dbCtx.InsertURL(url)
 	if err != nil {
 		log.Println("error when insert a url:", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -89,7 +88,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		})
 }
 
-func isURLValid(url string) bool {
+func isValidURL(url string) bool {
 	if len(url) == 0 {
 		return false
 	}

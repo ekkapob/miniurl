@@ -1,4 +1,4 @@
-package handlers
+package mid
 
 import (
 	"sync"
