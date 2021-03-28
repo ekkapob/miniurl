@@ -13,14 +13,3 @@ func DecodeReqJSON(r io.Reader, v interface{}) error {
 	}
 	return nil
 }
-
-// func (c *Context) GetCounter() (int, error) {
-// 	c.mu.Lock()
-// 	defer c.mu.Unlock()
-// 	var counter int
-// 	_, err := c.DB.QueryOne(pg.Scan(&counter), `SELECT nextval('url_counter')`)
-// 	if err != nil {
-// 		return 0, err
-// 	}
-// 	return counter, nil
-// }

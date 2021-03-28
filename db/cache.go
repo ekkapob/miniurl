@@ -45,6 +45,10 @@ func (c *Context) CacheURL(url models.URL) {
 	}
 }
 
+func (c *Context) DeleteCache(shortURL string) {
+	c.RD.Del(context.Background(), shortURL)
+}
+
 func (c *Context) GetCachedURL(shortURL string) (string, error) {
 	return c.RD.Get(context.Background(), shortURL).Result()
 }

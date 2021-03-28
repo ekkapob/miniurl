@@ -62,6 +62,18 @@ func (c *Context) GetURLs(options map[string]string) (
 	return urls, count, err
 }
 
+func (c *Context) DeleteURL(url models.URL) (int, string, error) {
+	var shortURLs []string
+	r, err := c.DB.Model(&url).WherePK().Returning("short_url").Delete(&shortURLs)
+	rowAffected := r.RowsAffected()
+
+	var shortURL string
+	if rowAffected > 0 {
+		shortURL = shortURLs[0]
+	}
+	return rowAffected, shortURL, err
+}
+
 func GetIntFromMap(m map[string]string, key string) (int, error) {
 	if v, ok := m[key]; ok {
 		i, err := strconv.Atoi(v)
