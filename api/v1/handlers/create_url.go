@@ -6,13 +6,11 @@ import (
 	"miniurl/api/models"
 	"miniurl/db"
 	"miniurl/pkg/base62"
+	"miniurl/pkg/url"
 	"net/http"
 	"os"
-	"regexp"
 	"strconv"
 )
-
-const URL_REGEXP = `https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`
 
 var expiresInSeconds = 604800
 
@@ -41,7 +39,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !isValidURL(req.URL) {
+	if !url.IsValidURL(req.URL) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(
 			struct {
@@ -86,16 +84,4 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 			ShortURL: shortURL,
 			FullURL:  req.URL,
 		})
-}
-
-func isValidURL(url string) bool {
-	if len(url) == 0 {
-		return false
-	}
-
-	matched, err := regexp.Match(URL_REGEXP, []byte(url))
-	if err != nil {
-		return false
-	}
-	return matched
 }

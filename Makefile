@@ -27,6 +27,9 @@ run:
 	HOSTNAME=$(HOSTNAME) \
  	miniurl
 
+test:
+	go test ./...
+
 # example:
 # $ make mg-create name=create_users_table
 mg-create:
