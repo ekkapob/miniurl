@@ -11,6 +11,8 @@ func NewRouter(ctx handlers.Context, r *mux.Router) {
 
 	v1.HandleFunc("/urls", ctx.CreateURL).
 		Methods("POST")
+	v1.HandleFunc("/urls", ctx.GetURLs).
+		Methods("GET")
 	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).
 		Methods("GET")
 }
