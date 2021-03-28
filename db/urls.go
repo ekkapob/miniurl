@@ -1,9 +1,8 @@
 package db
 
 import (
-	"errors"
 	"miniurl/api/models"
-	"strconv"
+	"miniurl/pkg/utils"
 )
 
 func (c *Context) InsertURL(url models.URL) error {
@@ -37,11 +36,11 @@ func (c *Context) GetURLs(options map[string]string) (
 ) {
 
 	query := c.DB.Model(&urls)
-	i, err := GetIntFromMap(options, "limit")
+	i, err := utils.GetIntFromMap(options, "limit")
 	if err == nil {
 		query.Limit(i)
 	}
-	i, err = GetIntFromMap(options, "page")
+	i, err = utils.GetIntFromMap(options, "page")
 	if err == nil {
 		query.Offset(i)
 	}
@@ -72,14 +71,4 @@ func (c *Context) DeleteURL(url models.URL) (int, string, error) {
 		shortURL = shortURLs[0]
 	}
 	return rowAffected, shortURL, err
-}
-
-func GetIntFromMap(m map[string]string, key string) (int, error) {
-	if v, ok := m[key]; ok {
-		i, err := strconv.Atoi(v)
-		if err == nil {
-			return i, nil
-		}
-	}
-	return 0, errors.New("unable to find value")
 }

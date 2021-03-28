@@ -12,7 +12,6 @@ import (
 func (c *Context) DeleteURL(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
-
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -23,14 +22,11 @@ func (c *Context) DeleteURL(w http.ResponseWriter, r *http.Request) {
 		DB: c.DB,
 		RD: c.RD,
 	}
-
 	rowDeleted, shortURL, err := dbCtx.DeleteURL(models.URL{ID: id})
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	if rowDeleted != 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		return

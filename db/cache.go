@@ -3,8 +3,8 @@ package db
 import (
 	"context"
 	"miniurl/api/models"
+	"miniurl/pkg/utils"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -12,22 +12,14 @@ var popularURLTimelapse = 15
 var cachedExpiresInSeconds = 3600
 
 func init() {
-	popularURLTimelapse = setIntValue(
+	popularURLTimelapse = utils.GetInt(
 		os.Getenv("POPULAR_URL_TIMELAPSE_MINS"),
 		popularURLTimelapse,
 	)
-	cachedExpiresInSeconds = setIntValue(
+	cachedExpiresInSeconds = utils.GetInt(
 		os.Getenv("REDIS_URL_EXPIRE_SECONDS"),
 		cachedExpiresInSeconds,
 	)
-}
-
-func setIntValue(value string, defaultValue int) int {
-	i, err := strconv.Atoi(value)
-	if err == nil && i >= 0 {
-		return i
-	}
-	return defaultValue
 }
 
 func (c *Context) CacheURL(url models.URL) {

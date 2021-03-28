@@ -7,22 +7,18 @@ import (
 	"miniurl/db"
 	"miniurl/pkg/base62"
 	"miniurl/pkg/url"
+	"miniurl/pkg/utils"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 var expiresInSeconds = 604800
 
 func init() {
-	setURLExpiresInSeconds()
-}
-
-func setURLExpiresInSeconds() {
-	i, err := strconv.Atoi(os.Getenv("POSTGRES_URL_EXPIRE_SECONDS"))
-	if err == nil && i >= 0 {
-		expiresInSeconds = i
-	}
+	expiresInSeconds = utils.GetInt(
+		os.Getenv("POSTGRES_URL_EXPIRE_SECONDS"),
+		expiresInSeconds,
+	)
 }
 
 func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
