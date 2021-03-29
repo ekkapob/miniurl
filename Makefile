@@ -40,3 +40,10 @@ mg-up:
 
 mg-down:
 	migrate -database $(POSTGRES_URL) -path db/migrations down
+
+docker-up:
+	docker-compose up postgres redis app
+
+docker-migrate:
+	docker-compose up migrate
+

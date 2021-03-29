@@ -8,24 +8,12 @@ import (
 	"miniurl/web"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 )
-
-type Counter struct {
-	mu      sync.Mutex
-	counter uint64
-}
-
-func (c *Counter) Inc() {
-	c.mu.Lock()
-	c.counter++
-	c.mu.Unlock()
-}
 
 func main() {
 	hostname := os.Getenv("HOSTNAME")

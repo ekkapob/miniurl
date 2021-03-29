@@ -13,6 +13,15 @@ services:
       - POPULAR_URL_TIMELAPSE_MINS=15
       - HOSTNAME=http://127.0.0.1:8000
 
+  migrate:
+    image: migrate/migrate
+    volumes:
+        - ./db/migrations:/migrations
+    command: [
+      "-path", "/migrations", "-database",
+      "postgres://postgres:postgres@postgres:5432/app?sslmode=disable", "up"
+    ]
+
   postgres:
     image: postgres
     volumes:
@@ -30,3 +39,4 @@ services:
       - ./redis-data:/var/lib/redis
     ports:
       - "6379:6379"
+
