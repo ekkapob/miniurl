@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-func DecodeReqJSON(r io.Reader, v interface{}) error {
+func DecodeJSON(r io.Reader, v interface{}) error {
 	d := json.NewDecoder(r)
 	err := d.Decode(&v)
 	if err != nil {

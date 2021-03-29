@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"miniurl/api/models"
-	"miniurl/db"
 	"miniurl/pkg/base62"
 	"miniurl/pkg/url"
 	"miniurl/pkg/utils"
@@ -29,7 +28,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req Req
-	err := DecodeReqJSON(r.Body, &req)
+	err := DecodeJSON(r.Body, &req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -46,11 +45,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbCtx := &db.Context{
-		DB: c.DB,
-	}
-
-	counter, err := dbCtx.GetCounter()
+	counter, err := c.URLService.GetCounter()
 	if err != nil {
 		log.Println("error when get counter:", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +59,7 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 		ExpiresInSeconds: expiresInSeconds,
 	}
 
-	err = dbCtx.InsertURL(url)
+	err = c.URLService.InsertURL(url)
 	if err != nil {
 		log.Println("error when insert a url:", err)
 		w.WriteHeader(http.StatusInternalServerError)

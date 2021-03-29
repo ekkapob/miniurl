@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"math"
 	"miniurl/api/models"
-	"miniurl/db"
 	"net/http"
 	"strconv"
 )
@@ -15,16 +14,13 @@ func (c *Context) GetURLs(w http.ResponseWriter, r *http.Request) {
 	orderBy := r.FormValue("orderBy")
 	orderDirection := r.FormValue("orderDirection")
 
-	dbCtx := db.Context{
-		DB: c.DB,
-	}
 	queryOpts := map[string]string{
 		"page":           page,
 		"limit":          limit,
 		"orderBy":        orderBy,
 		"orderDirection": orderDirection,
 	}
-	urls, total, err := dbCtx.GetURLs(queryOpts)
+	urls, total, err := c.URLService.GetURLs(queryOpts)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

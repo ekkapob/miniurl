@@ -28,7 +28,7 @@ run:
  	miniurl
 
 test:
-	go test ./...
+	go test ./... -v
 
 # example:
 # $ make mg-create name=create_users_table

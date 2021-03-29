@@ -1,7 +1,6 @@
 package mid
 
 import (
-	"miniurl/db"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,20 +11,16 @@ func (c *Context) CheckCachedURL(next http.HandlerFunc) http.HandlerFunc {
 		vars := mux.Vars(r)
 		shortURL := vars["shortURL"]
 
-		dbCtx := db.Context{
-			DB: c.DB,
-			RD: c.RD,
-		}
-		cached, err := dbCtx.GetCachedURL(shortURL)
+		cached, err := c.URLService.GetCachedURL(shortURL)
 		if err == nil {
 
 			go func() {
-				url, err := dbCtx.GetURLFromShortURL(shortURL)
+				url, err := c.URLService.GetURLFromShortURL(shortURL)
 				if err != nil {
 					return
 				}
-				dbCtx.CacheURL(url)
-				dbCtx.UpdateHit(url)
+				c.URLService.CacheURL(url)
+				c.URLService.UpdateHit(url)
 			}()
 
 			http.Redirect(w, r, cached, http.StatusFound)

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"log"
-	"miniurl/db"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -16,20 +15,16 @@ func (c *Context) Redirect(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	shortURL := vars["shortURL"]
 
-	dbCtx := &db.Context{
-		DB: c.DB,
-		RD: c.RD,
-	}
-	url, err := dbCtx.GetURLFromShortURL(shortURL)
+	url, err := c.URLService.GetURLFromShortURL(shortURL)
 	if err != nil {
 		w.WriteHeader(http.StatusGone)
 		return
 	}
-	err = dbCtx.UpdateHit(url)
+	err = c.URLService.UpdateHit(url)
 	if err != nil {
 		log.Println("error when update URL hit:", err)
 	}
 
-	dbCtx.CacheURL(url)
+	c.URLService.CacheURL(url)
 	http.Redirect(w, r, url.FullURL, http.StatusFound)
 }

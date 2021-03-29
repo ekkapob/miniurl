@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"miniurl/db"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,11 +13,7 @@ func (c *Context) GetURL(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	shortURL := vars["shortURL"]
 
-	dbCtx := &db.Context{
-		DB: c.DB,
-	}
-
-	url, err := dbCtx.GetURLFromShortURL(shortURL)
+	url, err := c.URLService.GetURLFromShortURL(shortURL)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(

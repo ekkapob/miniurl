@@ -2,6 +2,7 @@ package web
 
 import (
 	"miniurl/context"
+	"miniurl/service"
 	"miniurl/web/handlers"
 	"miniurl/web/mid"
 
@@ -10,13 +11,11 @@ import (
 
 func NewRouter(appCtx context.App, r *mux.Router) {
 	mw := &mid.Context{
-		DB: appCtx.DB,
-		RD: appCtx.RD,
+		URLService: service.NewURLService(appCtx.DB, appCtx.RD),
 	}
 
 	ctx := &handlers.Context{
-		DB: appCtx.DB,
-		RD: appCtx.RD,
+		URLService: service.NewURLService(appCtx.DB, appCtx.RD),
 	}
 
 	r.HandleFunc("/{shortURL}", mw.CheckCachedURL(ctx.Redirect)).

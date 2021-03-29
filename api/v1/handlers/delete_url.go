@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"miniurl/api/models"
-	"miniurl/db"
 	"net/http"
 	"strconv"
 
@@ -18,11 +17,7 @@ func (c *Context) DeleteURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbCtx := db.Context{
-		DB: c.DB,
-		RD: c.RD,
-	}
-	rowDeleted, shortURL, err := dbCtx.DeleteURL(models.URL{ID: id})
+	rowDeleted, shortURL, err := c.URLService.DeleteURL(models.URL{ID: id})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -32,6 +27,6 @@ func (c *Context) DeleteURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbCtx.DeleteCache(shortURL)
+	c.URLService.DeleteCache(shortURL)
 	w.WriteHeader(http.StatusOK)
 }
