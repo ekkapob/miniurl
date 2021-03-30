@@ -40,11 +40,27 @@ JSON Request:
     "url": "https://www.cnn.com"
 }
 ```
-JSON Response:
+Response Statuses:
+  - [201] Successfully created
+
 ```sh
 {
     "short_url": "b",
     "full_url": "https://www.cnn.com"
+}
+```
+
+  - [400] on bad requests: invalid URL, blacklisted URL
+
+```sh
+{
+    "error": "URL is not valid. Please provide a full URL e.g. https://google.com"
+}
+```
+
+```sh
+{
+    "error": "This URL is in blacklist."
 }
 ```
 
@@ -107,3 +123,24 @@ JSON Response:
 Response Statuses:
   - [200] OK
   - [400] When cannot find the URL to be deleted
+
+### 5) Create a blacklist URL
+**[POST] http://178.128.58.166/api/v1/blacklist_urls**
+
+JSON Request:
+```sh
+{
+    "url": "https://www.cnn.com"
+}
+```
+
+Response Statuses:
+  - [201] OK
+  - [400] on bad request
+
+```sh
+{
+    "error": "URL is not valid. Please provide a full URL e.g. https://google.com"
+}
+```
+

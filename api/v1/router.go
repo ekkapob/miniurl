@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"miniurl/api/mid"
 	"miniurl/api/v1/handlers"
 	"miniurl/service"
 
@@ -12,7 +13,9 @@ func NewRouter(ctx handlers.Context, r *mux.Router) {
 
 	v1 := r.PathPrefix("/v1").Subrouter()
 
-	v1.HandleFunc("/urls", ctx.CreateURL).
+	mw := &mid.Context{service.NewURLService(ctx.DB, ctx.RD)}
+
+	v1.HandleFunc("/urls", mw.CheckURL(mw.CheckBlacklist(ctx.CreateURL))).
 		Methods("POST")
 	v1.HandleFunc("/urls", ctx.GetURLs).
 		Methods("GET")
@@ -21,4 +24,7 @@ func NewRouter(ctx handlers.Context, r *mux.Router) {
 
 	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).
 		Methods("GET")
+
+	v1.HandleFunc("/blacklist_urls", mw.CheckURL(ctx.CreateBlacklistURL)).
+		Methods("POST")
 }

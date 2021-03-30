@@ -20,16 +20,18 @@ var (
 )
 
 type URLService interface {
-	InsertURL(url models.URL) error
-	GetURLFromShortURL(shortURL string) (models.URL, error)
+	InsertURL(models.URL) error
+	GetURLFromShortURL(string) (models.URL, error)
 	GetCounter() (int, error)
-	UpdateHit(url models.URL) error
-	GetURLs(options map[string]string) (urls []models.URL, total int, err error)
-	DeleteURL(url models.URL) (int, string, error)
+	UpdateHit(models.URL) error
+	GetURLs(map[string]string) (urls []models.URL, total int, err error)
+	DeleteURL(models.URL) (int, string, error)
 
-	CacheURL(url models.URL)
-	GetCachedURL(shortURL string) (string, error)
-	DeleteCache(shortURL string)
+	CacheURL(models.URL)
+	GetCachedURL(string) (string, error)
+	DeleteCache(string)
+	GetBlacklistURLs() ([]string, error)
+	InsertBlacklistURL(string) error
 }
 
 type service struct {
@@ -147,4 +149,29 @@ func (s *service) GetCachedURL(shortURL string) (string, error) {
 
 func (s *service) DeleteCache(shortURL string) {
 	RD.Del(context.Background(), shortURL)
+}
+
+func (s *service) GetBlacklistURLs() ([]string, error) {
+	urls := []string{}
+
+	type blacklistURL struct {
+		URL string
+	}
+	var blacklistURLs []blacklistURL
+	_, err := DB.Query(&blacklistURLs, `
+		SELECT url FROM blacklist_urls`,
+	)
+	for _, v := range blacklistURLs {
+		urls = append(urls, v.URL)
+	}
+	return urls, err
+}
+
+func (s *service) InsertBlacklistURL(url string) error {
+	type BlacklistURL struct {
+		URL string
+	}
+	blacklistURL := BlacklistURL{url}
+	_, err := DB.Model(&blacklistURL).Insert()
+	return err
 }

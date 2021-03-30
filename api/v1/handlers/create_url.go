@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"miniurl/api/models"
 	"miniurl/pkg/base62"
-	"miniurl/pkg/url"
 	"miniurl/pkg/utils"
 	"net/http"
 	"os"
@@ -22,7 +22,6 @@ func init() {
 
 func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	type Req struct {
 		URL string
 	}
@@ -30,18 +29,8 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 	var req Req
 	err := DecodeJSON(r.Body, &req)
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if !url.IsValidURL(req.URL) {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(
-			struct {
-				Error string `json:"error"`
-			}{
-				Error: "URL is not valid. Please provide a full URL e.g. https://google.com",
-			})
 		return
 	}
 
