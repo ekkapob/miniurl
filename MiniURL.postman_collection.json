@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "791f7028-2e14-42d1-a3c6-583c70b67020",
+		"_postman_id": "aeac79fb-74b5-41e1-bbf4-494f524a18b8",
 		"name": "MiniURL",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -138,6 +138,34 @@
 						"v1",
 						"urls",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[api] Create a blacklist URL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.cnn.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/blacklist_urls",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"blacklist_urls"
 					]
 				}
 			},
