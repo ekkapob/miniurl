@@ -1,0 +1,24 @@
+.btn {
+  border: none;
+}
+
+.btn-primary {
+  background-color: black;
+  &:hover {
+    background-color: red;
+  }
+}
+
+#admin-dashboard-link {
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+a {
+  color: initial;
+  text-decoration: none;
+  &:hover {
+    color: red;
+  }
+}

@@ -19,6 +19,10 @@ var (
 	cachedExpiresInSeconds = 3600
 )
 
+const (
+	URL_PAGE_LIMIT = 20
+)
+
 type URLService interface {
 	InsertURL(models.URL) error
 	GetURLFromShortURL(string) (models.URL, error)
@@ -80,25 +84,32 @@ func (s *service) UpdateHit(url models.URL) error {
 
 func (s *service) GetURLs(options map[string]string) (urls []models.URL, total int, err error) {
 	query := DB.Model(&urls)
-	i, err := utils.GetIntFromMap(options, "limit")
+
+	limit, err := utils.GetIntFromMap(options, "limit")
 	if err == nil {
-		query.Limit(i)
-	}
-	i, err = utils.GetIntFromMap(options, "page")
-	if err == nil {
-		query.Offset(i)
+		query = query.Limit(limit)
 	}
 
-	if v, ok := options["orderBy"]; ok {
-		if v == "expired_date" {
-			query.OrderExpr(
-				"created_at + expires_in_seconds * interval '1 second'" +
-					" " +
-					options["orderDirection"],
-			)
-		} else {
-			query.Order(v + " " + options["orderDirection"])
+	page, err := utils.GetIntFromMap(options, "page")
+	if err == nil {
+		if page < 1 {
+			page = 1
 		}
+		query = query.Offset((page - 1) * limit)
+	}
+
+	orderBy := options["orderBy"]
+	switch orderBy {
+	case "":
+		query = query.Order("created_at")
+	case "expired_date":
+		query = query.OrderExpr(
+			"created_at + expires_in_seconds * interval '1 second'" +
+				" " +
+				options["orderDirection"],
+		)
+	default:
+		query = query.Order(orderBy + " " + options["orderDirection"])
 	}
 
 	count, err := query.SelectAndCount()

@@ -1,0 +1,25 @@
+$grey: #6f6f6f;
+
+#admin-dashboard {
+  .menus {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 2em;
+    a {
+      text-decoration: none;
+      &.active {
+        color: red;
+      }
+    }
+  }
+  .content {
+    border-left: 1px solid $grey;
+  }
+  hr {
+    background-color: $grey;
+    padding: 0;
+    margin: 0;
+    opacity: initial;
+  }
+}

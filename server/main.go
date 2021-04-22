@@ -16,7 +16,8 @@ import (
 )
 
 func main() {
-	hostname := os.Getenv("HOSTNAME")
+	// hostname := os.Getenv("HOSTNAME")
+	port := os.Getenv("PORT")
 	r := mux.NewRouter()
 
 	ctx := context.App{
@@ -29,11 +30,11 @@ func main() {
 
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         ":8000",
+		Addr:         port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	fmt.Println("server is listening on", hostname)
+	fmt.Println("server is listening on", port)
 	log.Fatal(srv.ListenAndServe())
 }
 
