@@ -18,6 +18,6 @@ func NewRouter(appCtx context.App, r *mux.Router) {
 		URLService: service.NewURLService(appCtx.DB, appCtx.RD),
 	}
 
-	r.HandleFunc("/{shortURL}", mw.CheckCachedURL(ctx.Redirect)).
+	r.HandleFunc("/urls/{shortURL}", mw.CheckCachedURL(ctx.Redirect)).
 		Methods("GET")
 }
