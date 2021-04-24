@@ -1,5 +1,11 @@
-# MiniURL
+# BigURL [http://bigurl.tk](http://bigurl.tk)
 Shortest URL Ever!
+
+For Admin, use
+- Account: `admin`
+- Password: `admin`
+
+Notes: Success login is saved to local storage.
 
 ## To Run
 ```sh
@@ -14,10 +20,9 @@ $ make docker-migrate
 
 
 ## Redirect with Short URL
-Service is currently running on `http://178.128.58.166`
 
 ```sh
-http://178.128.58.166/{short_url}
+http://bigurl.tk/urls/{short_url}
 ```
 
 Results:
@@ -28,11 +33,11 @@ Results:
 [Postman Collection](https://raw.githubusercontent.com/ekkapob/miniurl/main/MiniURL.postman_collection.json)
 
 Environments
-- `host`: `http://178.128.58.166`
+- `host`: `http://bigurl.tk`
 
 ## API Usage
 ### 1) Create a short URL
-**[POST] http://178.128.58.166/api/v1/urls**
+**[POST] http://bigurl.tk/api/v1/urls**
 
 JSON Request:
 ```sh
@@ -65,7 +70,7 @@ Response Statuses:
 ```
 
 ### 2) Get a short URL
-**[GET] http://178.128.58.166/api/v1/urls/{short_url}**
+**[GET] http://bigurl.tk/api/v1/urls/{short_url}**
 
 JSON Response:
 ```sh
@@ -75,7 +80,7 @@ JSON Response:
 }
 ```
 ### 3) Get URLs with sorting and pagination
-**[GET] http://178.128.58.166/api/v1/urls?{options}**
+**[GET] http://bigurl.tk/api/v1/urls?{options}**
 
 Options
 | names | values | descriptions |
@@ -118,14 +123,14 @@ JSON Response:
 ```
 
 ### 4) Delete a URL
-**[DELETE] http://178.128.58.166/api/v1/urls/{url_id}**
+**[DELETE] http://bigurl.tk/api/v1/urls/{url_id}**
 
 Response Statuses:
   - [200] OK
   - [400] When cannot find the URL to be deleted
 
 ### 5) Create a blacklist URL
-**[POST] http://178.128.58.166/api/v1/blacklist_urls**
+**[POST] http://bigurl.tk/api/v1/blacklist_urls**
 
 JSON Request:
 ```sh
@@ -144,3 +149,6 @@ Response Statuses:
 }
 ```
 
+## TODOs
+1. Secured all APIs with OAuth
+2. Add Blacklist URLs management in Admin Dashboard
