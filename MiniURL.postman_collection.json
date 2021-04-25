@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "aeac79fb-74b5-41e1-bbf4-494f524a18b8",
+		"_postman_id": "95f674a5-38d5-4373-a323-19c285500f06",
 		"name": "MiniURL",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -144,6 +144,25 @@
 			"response": []
 		},
 		{
+			"name": "[api] Get blacklist URLs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/blacklist_urls",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"blacklist_urls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "[api] Create a blacklist URL",
 			"request": {
 				"method": "POST",
@@ -166,6 +185,35 @@
 						"api",
 						"v1",
 						"blacklist_urls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[api] Delete a blacklist URL",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/blacklist_urls/65",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"blacklist_urls",
+						"65"
 					]
 				}
 			},

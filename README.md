@@ -151,4 +151,3 @@ Response Statuses:
 
 ## TODOs
 1. Secured all APIs with OAuth
-2. Add Blacklist URLs management in Admin Dashboard
