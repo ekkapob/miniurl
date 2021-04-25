@@ -37,6 +37,7 @@ type URLService interface {
 	GetBlacklistURLs() ([]models.BlacklistURL, error)
 	InsertBlacklistURL(string) error
 	DeleteBlacklistURL(int) (int, error)
+	FindBlacklistURL(*models.BlacklistURL) error
 }
 
 type service struct {
@@ -182,4 +183,12 @@ func (s *service) DeleteBlacklistURL(id int) (int, error) {
 	r, err := DB.Model(&url).WherePK().Delete()
 
 	return r.RowsAffected(), err
+}
+
+func (s *service) FindBlacklistURL(url *models.BlacklistURL) error {
+	err := DB.Model(url).
+		Where("url = ?", url.URL).
+		Limit(1).
+		Select()
+	return err
 }

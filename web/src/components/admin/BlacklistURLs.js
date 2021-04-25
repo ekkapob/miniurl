@@ -87,7 +87,7 @@ function BlacklistURLs() {
         </label>
         <input id="addURLInput" className="form-control"
           type="text" onChange={onAddURLChange} value={addURLText}/>
-        <button type="submit" class="btn btn-primary"
+        <button type="submit" className="btn btn-primary"
           onClick={onBlacklistURLCreate}>Create</button>
       </div>
       {

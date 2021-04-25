@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -19,7 +18,6 @@ func (c *Context) CreateBlacklistURL(w http.ResponseWriter, r *http.Request) {
 
 	err = c.URLService.InsertBlacklistURL(req.URL)
 	if err != nil {
-		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

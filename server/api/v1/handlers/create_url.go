@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"miniurl/api/models"
 	"miniurl/pkg/base62"
@@ -29,7 +28,6 @@ func (c *Context) CreateURL(w http.ResponseWriter, r *http.Request) {
 	var req Req
 	err := DecodeJSON(r.Body, &req)
 	if err != nil {
-		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
