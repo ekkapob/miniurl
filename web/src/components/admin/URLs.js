@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 
 import { distanceDateFromSeconds, formatDate } from './../../date';
 
+import { LoginContext } from './../../context/login';
 import Pagination from './Pagination';
 
 import classNames from 'classnames';
@@ -22,6 +23,7 @@ function URLs() {
   const [filterSelect, setFilterSelect] = useState('full_url');
 
   const [deletingURL, setDeletingURL] = useState();
+  const [login] = useContext(LoginContext);
 
   const modal = useRef(null);
 
@@ -33,7 +35,11 @@ function URLs() {
     setFilterText('');
     setURLs([]);
     setDisplayURLs([]);
-    axios.get(`/api/v1/urls?page=${page}&limit=${pageURLs}&orderBy=${orderBy}&orderDirection=desc`)
+    axios.get(`/api/v1/urls?page=${page}&limit=${pageURLs}&orderBy=${orderBy}&orderDirection=desc`, {
+      headers: {
+        Authorization: `Basic ${login.basicAuth}`
+      }
+    })
       .then(res => {
         const { urls, total_pages } = res.data;
         setURLs(urls);
@@ -63,7 +69,11 @@ function URLs() {
 
   const onConfirmDeleteURL = (deletingUrl) => {
     return (e) => {
-      axios.delete(`/api/v1/urls/${deletingUrl.id}`)
+      axios.delete(`/api/v1/urls/${deletingUrl.id}`, {
+        headers: {
+          Authorization: `Basic ${login.basicAuth}`,
+        },
+      })
         .then(res => {
           setDeletingURL();
           fetchURLs();

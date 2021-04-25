@@ -4,6 +4,7 @@ export const LoginContext = createContext();
 
 const initialState = {
   status: false,
+  basicAuth: '',
 };
 
 const UPDATE_LOGIN = 'UPDATE_LOGIN';

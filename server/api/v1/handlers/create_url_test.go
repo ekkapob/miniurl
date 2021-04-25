@@ -3,7 +3,9 @@ package handlers
 import (
 	"bytes"
 	"errors"
+	"miniurl/api/mid"
 	"miniurl/pkg/base62"
+	"miniurl/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -19,7 +21,9 @@ func postCreateURL(url string) (*http.Request, *httptest.ResponseRecorder) {
 func TestInvalidURL(t *testing.T) {
 	req, rr := postCreateURL("www.google.com")
 	ctx := Context{URLService: &MockService{}}
-	handler := http.HandlerFunc(ctx.CreateURL)
+
+	mw := &mid.Context{service.NewURLService(ctx.DB, ctx.RD)}
+	handler := http.HandlerFunc(mw.CheckURL(ctx.CreateURL))
 	handler.ServeHTTP(rr, req)
 
 	expectedCode := http.StatusBadRequest

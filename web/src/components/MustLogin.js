@@ -8,12 +8,14 @@ function MustLogin(props) {
   const redirectURL = props.location.pathname;
 
   useEffect(() => {
-    if( checkLocalAuth()) {
-      dispatchLogin({
-        type: 'UPDATE_LOGIN',
-        payload: { status: true },
-      });
-    }
+    const { login, basicAuth } = checkLocalAuth();
+    if (!login) return;
+
+    dispatchLogin({
+      type: 'UPDATE_LOGIN',
+      payload: { status: login, basicAuth },
+    });
+
   }, []);
 
   const checkLocalAuth = () => {
@@ -22,9 +24,10 @@ function MustLogin(props) {
     if (!decryptedAuth) return false;
     try {
       const json = JSON.parse(decryptedAuth) || { login: false };
-      return json.login;
+      const { login, basicAuth } = json;
+      return { login, basicAuth };
     } catch (err) {
-      return false;
+      return { login: false };
     }
   };
 

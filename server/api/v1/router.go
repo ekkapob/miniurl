@@ -15,20 +15,25 @@ func NewRouter(ctx handlers.Context, r *mux.Router) {
 
 	mw := &mid.Context{service.NewURLService(ctx.DB, ctx.RD)}
 
-	v1.HandleFunc("/urls", mw.CheckURL(mw.CheckBlacklist(ctx.CreateURL))).
+	v1.HandleFunc("/auth", ctx.Auth).Methods("POST")
+
+	v1.HandleFunc("/urls",
+		mw.CheckURL(mw.CheckBlacklist(ctx.CreateURL))).
 		Methods("POST")
-	v1.HandleFunc("/urls", ctx.GetURLs).
+
+	v1.HandleFunc("/urls", mw.BasicAuth(ctx.GetURLs)).
 		Methods("GET")
-	v1.HandleFunc("/urls/{id}", ctx.DeleteURL).
+	v1.HandleFunc("/urls/{id}", mw.BasicAuth(ctx.DeleteURL)).
 		Methods("DELETE")
 
 	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).
 		Methods("GET")
 
-	v1.HandleFunc("/blacklist_urls", ctx.GetBlacklistURLs).
+	v1.HandleFunc("/blacklist_urls", mw.BasicAuth(ctx.GetBlacklistURLs)).
 		Methods("GET")
-	v1.HandleFunc("/blacklist_urls", mw.CheckURL(ctx.CreateBlacklistURL)).
+	v1.HandleFunc("/blacklist_urls",
+		mw.BasicAuth(mw.CheckURL(ctx.CreateBlacklistURL))).
 		Methods("POST")
-	v1.HandleFunc("/blacklist_urls/{id}", ctx.DeleteBlacklistURL).
+	v1.HandleFunc("/blacklist_urls/{id}", mw.BasicAuth(ctx.DeleteBlacklistURL)).
 		Methods("DELETE")
 }

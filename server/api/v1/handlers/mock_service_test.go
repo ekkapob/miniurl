@@ -39,3 +39,18 @@ func (s *MockService) GetCachedURL(shortURL string) (string, error) {
 }
 func (s *MockService) DeleteCache(shortURL string) {
 }
+
+func (s *MockService) InsertBlacklistURL(url string) error {
+	return nil
+}
+
+func (s *MockService) GetBlacklistURLs() ([]models.BlacklistURL, error) {
+	return []models.BlacklistURL{}, nil
+}
+
+func (s *MockService) DeleteBlacklistURL(id int) (int, error) {
+	return 0, nil
+}
+func (s *MockService) FindBlacklistURL(url *models.BlacklistURL) error {
+	return nil
+}

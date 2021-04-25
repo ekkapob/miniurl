@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { useContext, useRef, useState } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { encrypt } from './../crypto';
@@ -18,25 +20,37 @@ function Login(props) {
   );
   const redirectURL = search.redirect || '/';
 
-  const onSubmit = () => {
+  const doLogin = () => {
     setError(false);
 
-    if (!account.current.value || !password.current.value) return;
-    if (
-      account.current.value !== process.env.REACT_APP_ACCOUNT &&
-      password.current.value !== process.env.REACT_APP_PWD
-    )  {
-      setError(true);
-      return;
-    }
+    axios.post('/api/v1/auth', {
+      account: account.current.value,
+      password: password.current.value,
+    })
+      .then(res => {
+        const { basic_auth } = res.data;
 
-    const auth = encrypt(JSON.stringify({login: true}));
-    localStorage.setItem('auth', auth);
+        const auth = encrypt(JSON.stringify({
+          login: true,
+          basicAuth: basic_auth,
+        }));
+        localStorage.setItem('auth', auth);
 
-    dispatchLogin({
-      type: 'UPDATE_LOGIN',
-      payload: { status: true },
-    });
+        dispatchLogin({
+          type: 'UPDATE_LOGIN',
+          payload: {
+            status: true,
+            basicAuth: basic_auth,
+          },
+        });
+      })
+      .catch(err => {
+        setError(true);
+      });
+  };
+
+  const onSubmit = () => {
+    doLogin();
   };
 
   const onPasswordKeyDown = (e) => {

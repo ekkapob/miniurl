@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { formatDate } from './../../date';
+
+import { LoginContext } from './../../context/login';
 
 function BlacklistURLs() {
   const modal = useRef(null);
@@ -10,13 +12,18 @@ function BlacklistURLs() {
   const [addURLError, setAddURLError] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [deletingURL, setDeletingURL] = useState();
+  const [login] = useContext(LoginContext);
 
   useEffect(() => {
     fetchURLs();
   }, []);
 
   const fetchURLs = () => {
-    axios.get('/api/v1/blacklist_urls')
+    axios.get('/api/v1/blacklist_urls', {
+      headers: {
+        Authorization: `Basic ${login.basicAuth}`,
+      },
+    })
       .then(res => {
         const { urls } = res.data;
         setURLs(urls);
@@ -39,7 +46,11 @@ function BlacklistURLs() {
 
   const onConfirmDeleteURL = (url) => {
     return (e) => {
-      axios.delete(`/api/v1/blacklist_urls/${url.id}`)
+      axios.delete(`/api/v1/blacklist_urls/${url.id}`, {
+        headers: {
+          Authorization: `Basic ${login.basicAuth}`,
+        },
+      })
         .then(res => {
           setDeletingURL();
           fetchURLs();
@@ -68,6 +79,10 @@ function BlacklistURLs() {
     setAddURLError(false);
     axios.post('/api/v1/blacklist_urls', {
       url: addURLText,
+    }, {
+      headers: {
+        Authorization: `Basic ${login.basicAuth}`,
+      },
     })
       .then(res => {
         setAddURLText('');

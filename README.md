@@ -150,4 +150,4 @@ Response Statuses:
 ```
 
 ## TODOs
-1. Secured all APIs with OAuth
+1. Change from basic auth to OAuth with (expired and refresh token)
