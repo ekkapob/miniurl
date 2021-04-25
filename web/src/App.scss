@@ -4,7 +4,7 @@
 
 .btn-primary {
   background-color: black;
-  &:hover {
+  &:focus, &:hover, &:active, &:hover {
     background-color: red;
   }
 }

@@ -8,8 +8,9 @@ import Home from './components/Home';
 import withContext from './withContext';
 
 import AdminDashboard from './components/admin/Dashboard';
-import Login from './components/Login';
+import Blacklist from './components/admin/Blacklist';
 import MustLogin from './components/MustLogin';
+import Login from './components/Login';
 
 import './App.scss';
 
@@ -20,6 +21,12 @@ function App() {
         <Route path="/admin/dashboard">
           <MustLogin>
             <AdminDashboard></AdminDashboard>
+          </MustLogin>
+        </Route>
+
+        <Route path="/admin/blacklist">
+          <MustLogin>
+            <Blacklist></Blacklist>
           </MustLogin>
         </Route>
 

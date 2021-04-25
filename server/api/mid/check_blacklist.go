@@ -26,7 +26,7 @@ func (c *Context) CheckBlacklist(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		for _, v := range urls {
-			if v == req.URL {
+			if v.URL == req.URL {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusBadRequest)
 				json.NewEncoder(w).Encode(

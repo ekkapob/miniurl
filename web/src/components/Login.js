@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { encrypt } from './../crypto';
 
@@ -23,8 +23,8 @@ function Login(props) {
 
     if (!account.current.value || !password.current.value) return;
     if (
-      account.current.value != process.env.REACT_APP_ACCOUNT &&
-      password.current.value != process.env.REACT_APP_PWD
+      account.current.value !== process.env.REACT_APP_ACCOUNT &&
+      password.current.value !== process.env.REACT_APP_PWD
     )  {
       setError(true);
       return;

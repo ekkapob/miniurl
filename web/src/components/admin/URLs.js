@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import { addSeconds } from 'date-fns'
+
+import { distanceDateFromSeconds, formatDate } from './../../date';
 
 import Pagination from './Pagination';
 
@@ -20,7 +21,7 @@ function URLs() {
   const [filterText, setFilterText] = useState('');
   const [filterSelect, setFilterSelect] = useState('full_url');
 
-  const [deletingURL, setDeletingURL] = useState()
+  const [deletingURL, setDeletingURL] = useState();
 
   const modal = useRef(null);
 
@@ -40,21 +41,6 @@ function URLs() {
         setTotalPages(total_pages);
       })
       .catch(err => {});
-  };
-
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return new Intl.DateTimeFormat('en-GB',{
-      year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', second: 'numeric',
-      hour12: false,
-      timeZone: 'Asia/Bangkok',
-    }).format(d);
-  };
-
-  const expiredDateTime = (createdDateStr, expireInSeconds) => {
-    const date = new Date(createdDateStr);
-    return formatDate(addSeconds(date, expireInSeconds));
   };
 
   const onFilterChange = (e) => {
@@ -126,15 +112,15 @@ function URLs() {
         <label className="input-group-text" htmlFor="filterURLInput">
           Filter
         </label>
-      <select className="form-select" aria-label="Default select example"
-        onChange={onFilterSelectChange} value={filterSelect}>
-        <option value="full_url">Full URL</option>
-        <option value="short_url">Short URL</option>
-      </select>
+        <select className="form-select"
+          aria-label="Default select example"
+          onChange={onFilterSelectChange} value={filterSelect}>
+          <option value="full_url">Full URL</option>
+          <option value="short_url">Short URL</option>
+        </select>
         <input id="filterURLInput" className="form-control"
           type="text" onChange={onFilterChange} value={filterText}/>
       </div>
-
 
       <table className="table mt-2">
         <thead>
@@ -158,12 +144,12 @@ function URLs() {
                 <td>{v.hits}</td>
                 <td>{formatDate(v.created_at)}</td>
                 <td>
-                  {expiredDateTime(v.created_at, v.expires_in_seconds)}
+                  {distanceDateFromSeconds(v.created_at, v.expires_in_seconds)}
                 </td>
                 <td>
                   <button className="btn btn-danger btn-sm"
                     onClick={onDeleteURLClick(v)}>
-                    Delete
+                    delete
                   </button>
                 </td>
               </tr>
@@ -177,13 +163,12 @@ function URLs() {
           onPageLinkClick={onPageLinkClick}/>
       </div>
 
-
       <div ref={modal} id="deleteURLModal" className="modal fade" tabIndex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">Are you sure to delete a URL</h5>
+              <h5 className="modal-title" id="exampleModalLabel">Are you sure to delete a URL?</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal"
                 aria-label="Close"></button>
             </div>

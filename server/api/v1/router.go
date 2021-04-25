@@ -25,6 +25,10 @@ func NewRouter(ctx handlers.Context, r *mux.Router) {
 	v1.HandleFunc("/urls/{shortURL}", ctx.GetURL).
 		Methods("GET")
 
+	v1.HandleFunc("/blacklist_urls", ctx.GetBlacklistURLs).
+		Methods("GET")
 	v1.HandleFunc("/blacklist_urls", mw.CheckURL(ctx.CreateBlacklistURL)).
 		Methods("POST")
+	v1.HandleFunc("/blacklist_urls/{id}", ctx.DeleteBlacklistURL).
+		Methods("DELETE")
 }
