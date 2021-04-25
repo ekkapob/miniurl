@@ -84,7 +84,9 @@ func (s *service) UpdateHit(url models.URL) error {
 	return err
 }
 
-func (s *service) GetURLs(options map[string]string) (urls []models.URL, total int, err error) {
+func (s *service) GetURLs(options map[string]string) ([]models.URL, int, error) {
+
+	urls := []models.URL{}
 	query := DB.Model(&urls)
 
 	limit, err := utils.GetIntFromMap(options, "limit")
@@ -165,7 +167,7 @@ func (s *service) DeleteCache(shortURL string) {
 }
 
 func (s *service) GetBlacklistURLs() ([]models.BlacklistURL, error) {
-	var blacklistURLs []models.BlacklistURL
+	blacklistURLs := []models.BlacklistURL{}
 	err := DB.Model(&blacklistURLs).
 		Order("created_at DESC").
 		Select()

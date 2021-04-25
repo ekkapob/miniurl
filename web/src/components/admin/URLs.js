@@ -146,6 +146,12 @@ function URLs() {
         </thead>
         <tbody>
           {
+            displayURLs.length === 0 &&
+              <tr>
+                <td colSpan="7">No URLs</td>
+              </tr>
+          }
+          {
             displayURLs.map((v,k) => (
               <tr key={k}>
                 <th scope="row">{v.id}</th>

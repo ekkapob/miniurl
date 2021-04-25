@@ -129,6 +129,12 @@ function BlacklistURLs() {
         </thead>
         <tbody>
           {
+            displayURLs.length === 0 &&
+              <tr>
+                <td scope="col" colSpan="4"> No URLs</td>
+              </tr>
+          }
+          {
             displayURLs.map((v,k) => (
               <tr key={k}>
                 <th scope="row">{v.id}</th>
